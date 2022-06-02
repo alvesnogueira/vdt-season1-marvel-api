@@ -1,5 +1,8 @@
 
+# Setup
 
+1. Requirements
+    - [cypress] cypress@9.7.0
 # Viver de Teste 1.ª Temporada
 
 <h1 align="left">
@@ -56,6 +59,8 @@ cd vdt-season1-marvel-api
 npm i
 npx cypress run
 ```
+## Endereço da api Utilziada no projeto 
+marvel-qa-cademy.herokuapp.com
 
 ## 📝 License
 
