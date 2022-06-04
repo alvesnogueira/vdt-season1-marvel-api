@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('setToken', function(){
-    cy.request({
+    cy.api({
         method: 'POST',
         url: '/sessions',
         body:{
@@ -40,10 +40,24 @@ Cypress.Commands.add('setToken', function(){
 })
 
 Cypress.Commands.add('back2ThePast', function(){
-    cy.request({
+    cy.api({
         method:'DELETE',
         url: 'back2thepast/'+Cypress.env('id')
     }).then(function(response){
         expect(response.status).to.eql(200)
+    })
+})
+
+Cypress.Commands.add('postHero', function(payLoad){
+    cy.api({
+        method: 'POST',
+        url: '/characters',
+        body: payLoad,
+        headers:{
+            Authorization: Cypress.env('token')
+        },
+        failOnStatusCode: false
+    }).then(function(response){
+        return response
     })
 })

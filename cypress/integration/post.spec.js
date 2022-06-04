@@ -5,7 +5,7 @@ describe('POST /characters', function(){
         
     })
 
-    it('shoutld create one hero', function(){
+    it('shoutld create the hero', function(){
 
         
         let hero = {
@@ -14,40 +14,39 @@ describe('POST /characters', function(){
             team: ['Vingadores'],
             active: 'true'
         }
+        cy.postHero(hero)
+            .then(function(response){
+                expect(response.status).to.eql(201);
+                expect(response.body.character_id.length).to.eql(24);
+        })
+        
+       
+    })
 
-        cy.request({
-            method: 'POST',
-            url: '/characters',
-            body: hero,
-            headers:{
-                Authorization: Cypress.env('token')
-            }   
-        }).then(function(response){
-            expect(response.status).to.eql(201);
+    context("Duplicate registration", function(){
+        const hero = {
+            name: 'Chales Xavier',
+            alias: 'Professor X',
+            team: ['X-mem', 'iluminati'],
+            active: 'true'
+        }
+
+        before(function(){
+            cy.postHero(hero).then(function(response){
+                expect(response.status).to.eql(201)
+            })
+    
+        })
+
+        it('Do not register duplicate names', function(){
+            cy.postHero(hero).then(function(response){
+                expect(response.status).to.eql(400)
+                expect(response.body.error).to.eql('Duplicate character')
+            })
+    
         })
     })
 })
 
-Cypress.Commands.add('setToken', function(){
-    cy.request({
-        method: 'POST',
-        url: '/sessions',
-        body:{
-            email: 'israelalvesdesign@gmail.com',
-            password: 'guerra13'
-        }
-    }).then(function(response){
-        expect(response.status).eql(200)
-        cy.log(response.body.token)
-        Cypress.env('token', response.body.token)
-    })
-})
 
-Cypress.Commands.add('back2ThePast', function(){
-    cy.request({
-        method:'DELETE',
-        url: 'back2thepast/'+Cypress.env('id')
-    }).then(function(response){
-        expect(response.status).to.eql(200)
-    })
-})
+
